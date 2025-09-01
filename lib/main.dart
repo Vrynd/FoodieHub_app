@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/detail_provider.dart';
+import 'package:restaurant_app/provider/expand_description_provider.dart';
 import 'package:restaurant_app/provider/favorite_icon_provider.dart';
 import 'package:restaurant_app/provider/favorite_provider.dart';
 import 'package:restaurant_app/provider/index_nav_provider.dart';
@@ -17,6 +18,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => IndexNavProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (context) => ExpandDescriptionProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteIconProvider()),
         Provider(create: (context) => ApiService()),
         ChangeNotifierProvider(

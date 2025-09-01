@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/components/favorite_icon.dart';
 import 'package:restaurant_app/data/models/request/detail_request.dart';
 import 'package:restaurant_app/data/models/request/request.dart';
+import 'package:restaurant_app/provider/expand_description_provider.dart';
 
 class DetailItems extends StatelessWidget {
   final RestaurantDetail restaurantDetail;
@@ -86,12 +88,61 @@ class DetailItems extends StatelessWidget {
                 ],
               ),
               const SizedBox.square(dimension: 14),
-              Text(
-                restaurantDetail.description,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                // overflow: TextOverflow.ellipsis,
+              Consumer<ExpandDescriptionProvider>(
+                builder: (context, provider, _) {
+                  final style = Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  );
+                  return LayoutBuilder(
+                    builder: (context, size) {
+                      final span = TextSpan(
+                        text: restaurantDetail.description,
+                        style: style,
+                      );
+                      final tp = TextPainter(
+                        text: span,
+                        maxLines: 3,
+                        textDirection: TextDirection.ltr,
+                      )..layout(maxWidth: size.maxWidth);
+                      final didExceed = tp.didExceedMaxLines;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut,
+                            child: ConstrainedBox(
+                              constraints: provider.isExpand
+                                  ? const BoxConstraints()
+                                  : BoxConstraints(maxHeight: tp.height),
+                              child: Text(
+                                restaurantDetail.description,
+                                style: style,
+                                softWrap: true,
+                                overflow: TextOverflow.fade,
+                              ),
+                            ),
+                          ),
+                          if (didExceed) const SizedBox(height: 8),
+                          if (didExceed)
+                            TextButton.icon(
+                              onPressed: provider.toggleExpand,
+                              icon: Icon(
+                                provider.isExpand
+                                    ? Icons.expand_less_rounded
+                                    : Icons.expand_more_rounded,
+                              ),
+                              label: Text(
+                                provider.isExpand
+                                    ? "Less More"
+                                    : "Read More",
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),
