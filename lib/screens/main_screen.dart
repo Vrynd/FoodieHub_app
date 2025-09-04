@@ -23,20 +23,20 @@ class _MainScreenState extends State<MainScreen> {
           };
         },
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: context.watch<IndexNavProvider>().indexBottomNavBar,
-        onTap: (index) {
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        surfaceTintColor: Theme.of(context).colorScheme.onPrimary,
+        selectedIndex: context.watch<IndexNavProvider>().indexBottomNavBar,
+        onDestinationSelected: (index) {
           context.read<IndexNavProvider>().setIndextBottomNavBar = index;
         },
-        items: const [
-          BottomNavigationBarItem(
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.home),
             label: "Home",
             tooltip: "Home",
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.favorite),
             label: "Favorites",
             tooltip: "Favorites",
