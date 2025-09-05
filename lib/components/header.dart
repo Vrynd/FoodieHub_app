@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
-  final ValueChanged<String> onSearchList;
-  const Header({super.key, required this.onSearchList});
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {

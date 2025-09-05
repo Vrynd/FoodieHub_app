@@ -52,17 +52,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: restaurantList.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    return Header(
-                      onSearchList: (String query) {
-                        context
-                            .read<RestaurantListProvider>()
-                            .fetchRestaurantList(query);
-                      },
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Header(),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                      ],
                     );
                   }
                   final restaurant = restaurantList[index - 1];
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 16.0,
+                    ),
                     child: ListItems(
                       restaurant: restaurant,
                       onTap: () {
