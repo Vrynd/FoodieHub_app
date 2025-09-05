@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:readmore_expandable_text/readmore_expandable_text.dart';
 import 'package:restaurant_app/components/favorite_icon.dart';
 import 'package:restaurant_app/data/models/request/detail_request.dart';
 import 'package:restaurant_app/data/models/request/request.dart';
-import 'package:restaurant_app/provider/expand_description_provider.dart';
 
 class DetailItems extends StatelessWidget {
   final RestaurantDetail restaurantDetail;
@@ -88,61 +87,22 @@ class DetailItems extends StatelessWidget {
                 ],
               ),
               const SizedBox.square(dimension: 14),
-              Consumer<ExpandDescriptionProvider>(
-                builder: (context, provider, _) {
-                  final style = Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  );
-                  return LayoutBuilder(
-                    builder: (context, size) {
-                      final span = TextSpan(
-                        text: restaurantDetail.description,
-                        style: style,
-                      );
-                      final tp = TextPainter(
-                        text: span,
-                        maxLines: 3,
-                        textDirection: TextDirection.ltr,
-                      )..layout(maxWidth: size.maxWidth);
-                      final didExceed = tp.didExceedMaxLines;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AnimatedSize(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut,
-                            child: ConstrainedBox(
-                              constraints: provider.isExpand
-                                  ? const BoxConstraints()
-                                  : BoxConstraints(maxHeight: tp.height),
-                              child: Text(
-                                restaurantDetail.description,
-                                style: style,
-                                softWrap: true,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ),
-                          ),
-                          if (didExceed) const SizedBox(height: 8),
-                          if (didExceed)
-                            TextButton.icon(
-                              onPressed: provider.toggleExpand,
-                              icon: Icon(
-                                provider.isExpand
-                                    ? Icons.expand_less_rounded
-                                    : Icons.expand_more_rounded,
-                              ),
-                              label: Text(
-                                provider.isExpand
-                                    ? "Less More"
-                                    : "Read More",
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  );
-                },
+              ReadMoreExpandableText(
+                text: restaurantDetail.description,
+                maxLines: 3,
+                textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                buttonStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                expandText: 'Read More',
+                collapseText: 'Read Less',
+                expandIcon: Icons.expand_more_rounded,
+                collapseIcon: Icons.expand_less_rounded,
+                iconColor: Theme.of(context).colorScheme.primary,
+                iconSize: 20,
+                buttonPadding: const EdgeInsets.only(top: 8),
               ),
             ],
           ),
